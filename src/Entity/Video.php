@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\VideoRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\VideoRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=VideoRepository::class)
@@ -19,16 +20,20 @@ class Video
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank(message="Title field can't be empty.")
      */
     private $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Assert\NotBlank(message="Description field can't be empty.")
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Url field can't be empty.")
+     * @Assert\Url(message="This is not a valid url. It should be something like: http://exemple.com")
      */
     private $url;
 
