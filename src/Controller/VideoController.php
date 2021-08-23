@@ -52,11 +52,11 @@ class VideoController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
 
         $data = $request->toArray();
-        
-        $video = new Video();
-        $video->setTitle($data['title']);
-        $video->setDescription($data['description']);
-        $video->setUrl($data['url']);
+        $video = new Video(
+            $data['title'], 
+            $data['description'], 
+            $data['url']
+        );
 
         $errors = $validator->validate($video);
 

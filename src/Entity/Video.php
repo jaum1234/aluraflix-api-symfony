@@ -37,6 +37,13 @@ class Video
      */
     private $url;
 
+    public function __construct(string $title, string $description, string $url)
+    {
+        $this->title = $title;
+        $this->description = $description;
+        $this->url = $url;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
