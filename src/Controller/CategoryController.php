@@ -9,15 +9,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @Route("/api/categories", name="api_")
- */
 
 class CategoryController extends AbstractController
 {
-    /**
-     * @Route("", name="categories", methods={"GET"})
-     */
+    
     public function index(): Response
     {
         $repository = $this->getDoctrine()->getRepository(Category::class);
@@ -29,9 +24,7 @@ class CategoryController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}", name="category", methods={"GET"})
-     */
+    
     public function show(int $id): Response
     {
         $repository = $this->getDoctrine()->getRepository(Category::class);
@@ -43,9 +36,7 @@ class CategoryController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("", name="create_category", methods={"POST"})
-     */
+   
     public function store(Request $request, ValidatorInterface $validator): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
@@ -73,9 +64,7 @@ class CategoryController extends AbstractController
         ], 201);
     }
 
-    /**
-     * @Route("/{id}", name="update_category", methods={"PUT"})
-     */
+    
     public function put(Request $request, ValidatorInterface $validator, int $id): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
@@ -103,9 +92,7 @@ class CategoryController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/{id}", name="delete_category", methods={"DELETE"})
-     */
+    
     public function delete(int $id): Response
     {
         $repository = $this->getDoctrine()->getRepository(Category::class);

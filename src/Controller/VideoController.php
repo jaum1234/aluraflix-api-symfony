@@ -13,14 +13,10 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-/**
- * @Route("/api/videos", name="api_")
- */
+
 class VideoController extends AbstractController
 {
-    /**
-     * @Route("", name="videos", methods={"GET"})
-     */
+   
     public function index(): Response
     {
         $repository = $this->getDoctrine()->getRepository(Video::class);
