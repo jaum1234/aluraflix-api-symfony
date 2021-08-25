@@ -8,8 +8,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=VideoRepository::class)
+ * 
  */
-class Video
+class Video implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -37,11 +38,21 @@ class Video
      */
     private $url;
 
-    public function __construct(string $title, string $description, string $url)
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="videos")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $category;
+
+    
+
+    public function __construct(string $title, string $description, string $url, Category $category)
     {
         $this->title = $title;
         $this->description = $description;
         $this->url = $url;
+        $this->category = $category;
+        
     }
 
     public function getId(): ?int
@@ -54,23 +65,9 @@ class Video
         return $this->title;
     }
 
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
     public function getDescription(): ?string
     {
         return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
     }
 
     public function getUrl(): ?string
@@ -78,10 +75,46 @@ class Video
         return $this->url;
     }
 
-    public function setUrl(string $url): self
+    public function updatePropertiesValues(array $values, Category $category): self
     {
-        $this->url = $url;
+        $this->title = $values['title'];
+        $this->description = $values['description'];
+        $this->url = $values['url'];
+        $this->category = $category; 
 
         return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'title' => $this->getTitle(),
+            'description' => $this->getDescription(),
+            'url' => $this->getUrl(),
+            'categoryId' => $this->getCategory()->getId(),
+            '_links' => [
+                [
+                    'rel' => 'self',
+                    'path' => '/videos/' . $this->getId()
+                ],
+                [
+                    'rel' => 'especialidades',
+                    'path' => '/categories/' . $this->getCategory()->getId()
+                ]
+            ]
+        ];
     }
 }

@@ -27,44 +27,36 @@ class VideoTest extends KernelTestCase
         $this->entityManager = null;
     }
     
-    
     public function testMustStoreAVideoInDatabase(): void
     {
-        $video = new Video();
-        $video->setTitle('First test video');
-        $video->setDescription('Its description');
-        $video->setUrl('Its url');
-
+        $video = new Video('First title', 'First description', 'First url');
         $this->entityManager->persist($video);
         $this->entityManager->flush();
         
-        $video = $this->repository->findOneBy(['title' => 'First test video']);
+        $id = $video->getId();
+        $video = $this->repository->find($id);
 
-        $this->assertEquals('First test video', $video->getTitle());
-        $this->assertEquals('Its description', $video->getDescription());
-        $this->assertEquals('Its url', $video->getUrl());
+        $this->assertEquals('First title', $video->getTitle());
+        $this->assertEquals('First description', $video->getDescription());
+        $this->assertEquals('First url', $video->getUrl());
     }
 
-    public function testMustFetchAllVideosInIdOrder()
+    public function testMustUpdateThePropertyValuesOfAVideo()
     {
-        $video = new Video();
-        $video->setTitle('First test video');
-        $video->setDescription('Its description');
-        $video->setUrl('Its url');
+        $video = new Video('First title', 'First description', 'First url');
+        $this->entityManager->persist($video);
+        $this->entityManager->flush();
 
-        $video2 = new Video();
-        $video2->setTitle('Second test video');
-        $video2->setDescription('Its description');
-        $video2->setUrl('Its url');
+        $videoId = $video->getId();
+        $videoRecord = $this->repository->find($videoId);
+        $title = 'New title';
+        $description = 'New description';
+        $url = 'New url';
+        $videoRecord->updatePropertiesValues($title, $description, $url);
+        $this->entityManager->flush();
 
-        $video3 = new Video();
-        $video3->setTitle('Third test video');
-        $video3->setDescription('Its description');
-        $video3->setUrl('Its url');
-
-        $videos = $this->repository->findAll();
-        $videoArray = (array) $videos;
-        
-        
+        $this->assertEquals('New title', $video->getTitle());
+        $this->assertEquals('New description', $video->getDescription());
+        $this->assertEquals('New url', $video->getUrl());
     }
 }

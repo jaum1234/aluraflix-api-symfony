@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Video;
+use App\Repository\VideoRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,10 +35,10 @@ class VideoController extends AbstractController
     /**
      * @Route("/{id}", name="video", methods={"GET"})
      */
-    public function show(int $id): Response
+    public function show(VideoRepository $videoRepository,int $id): Response
     {
-        $repository = $this->getDoctrine()->getRepository(Video::class);
-        $video = $repository->find($id);
+        $video = $videoRepository->findOneByIdJoinedToCategory($id);
+        
 
         return $this->json([
             'Video was found with success!',
@@ -52,10 +54,14 @@ class VideoController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
 
         $data = $request->toArray();
+        $repository = $this->getDoctrine()->getRepository(Category::class);
+        $category = $repository->find($data['category_id']);
+        
         $video = new Video(
             $data['title'], 
             $data['description'], 
-            $data['url']
+            $data['url'],
+            $category
         );
 
         $errors = $validator->validate($video);
@@ -78,16 +84,26 @@ class VideoController extends AbstractController
     /**
      * @Route("/{id}", name="update_video", methods={"PUT"})
      */
-    public function put(Request $request, int $id): Response
+    public function put(Request $request, ValidatorInterface $validator, int $id): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $repository = $this->getDoctrine()->getRepository(Video::class);
-        
+
+        $videoRepository = $this->getDoctrine()->getRepository(Video::class);
+        $cateogoryRepository = $this->getDoctrine()->getRepository(Category::class);
+ 
         $data = $request->toArray();
-        $video = $repository->find($id);
-        $video->setTitle($data['title']);
-        $video->setDescription($data['description']);
-        $video->setUrl($data['url']);
+        $category = $cateogoryRepository->find($data['category_id']);
+        
+        $video = $videoRepository->find($id);
+        $video->updatePropertiesValues($data, $category);
+
+        $errors = $validator->validate($video);
+
+        if (count($errors) > 0) {
+            $errorString = (string) $errors;
+
+            return $this->json($errorString);
+        }
 
         $entityManager->flush();
 
