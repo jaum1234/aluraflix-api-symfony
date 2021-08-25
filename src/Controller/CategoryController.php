@@ -3,40 +3,21 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-
-class CategoryController extends AbstractController
+class CategoryController extends BaseController
 {
-    
-    public function index(): Response
+
+    public function __construct()
     {
-        $repository = $this->getDoctrine()->getRepository(Category::class);
-        $categories = $repository->findAll();
-
-        return $this->json([
-            'categories were listed with success!',
-            $categories
-        ]);
+        $this->class = Category::class;
     }
-
     
-    public function show(int $id): Response
-    {
-        $repository = $this->getDoctrine()->getRepository(Category::class);
-        $category = $repository->find($id);
-
-        return $this->json([
-            'category was found with success!',
-            $category
-        ]);
-    }
-
-   
     public function store(Request $request, ValidatorInterface $validator): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
@@ -89,23 +70,6 @@ class CategoryController extends AbstractController
                 'category was updated with success!',
                 $category
             ], 
-        );
-    }
-
-    
-    public function delete(int $id): Response
-    {
-        $repository = $this->getDoctrine()->getRepository(Category::class);
-        $category = $repository->find($id);
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->remove($category);
-        $entityManager->flush();
-
-        return $this->json([
-                $category->getTitle() . ' was deleted with success!'
-            ], 
-            410
         );
     }
 }

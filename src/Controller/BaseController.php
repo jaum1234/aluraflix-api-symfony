@@ -15,40 +15,40 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class BaseController extends AbstractController
 {
+    protected string $class;
     
     public function index(): Response
     {
-        $repository = $this->getDoctrine()->getRepository(Video::class);
-        $videos = $repository->findAll();
+        $repository = $this->getDoctrine()->getRepository($this->class);
+        $resources = $repository->findAll();
 
         return $this->json([
             'Videos were listed with success!',
-            $videos
+            $resources
         ]);
     }
 
-    public function show(VideoRepository $videoRepository,int $id): Response
+    public function show(VideoRepository $resourceRepository, int $id): Response
     {
-        $video = $videoRepository->findOneByIdJoinedToCategory($id);
+        $resource = $resourceRepository->find($id);
         
-
         return $this->json([
             'Video was found with success!',
-            $video
+            $resource
         ]);
     }
 
     public function delete(int $id): Response
     {
-        $repository = $this->getDoctrine()->getRepository(Video::class);
-        $video = $repository->find($id);
+        $repository = $this->getDoctrine()->getRepository($this->class);
+        $resource = $repository->find($id);
 
         $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->remove($video);
+        $entityManager->remove($resource);
         $entityManager->flush();
 
         return $this->json([
-                $video->getTitle() . ' was deleted with success!'
+                $resource->getTitle() . ' was deleted with success!'
             ], 
             410
         );

@@ -2,49 +2,27 @@
 
 namespace App\Controller;
 
-use App\Entity\Category;
 use App\Entity\Video;
+use App\Entity\Category;
+use App\Controller\BaseController;
 use App\Repository\VideoRepository;
+use Symfony\Component\Validator\Validation;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
-class VideoController extends AbstractController
+class VideoController extends BaseController
 {
+
+    public function __construct()
+    {
+        $this->class = Video::class;
+    }
    
-    public function index(): Response
-    {
-        $repository = $this->getDoctrine()->getRepository(Video::class);
-        $videos = $repository->findAll();
-
-        return $this->json([
-            'Videos were listed with success!',
-            $videos
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="video", methods={"GET"})
-     */
-    public function show(VideoRepository $videoRepository,int $id): Response
-    {
-        $video = $videoRepository->findOneByIdJoinedToCategory($id);
-        
-
-        return $this->json([
-            'Video was found with success!',
-            $video
-        ]);
-    }
-
-    /**
-     * @Route("", name="create_video", methods={"POST"})
-     */
     public function store(Request $request, ValidatorInterface $validator): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
@@ -77,9 +55,6 @@ class VideoController extends AbstractController
         ], 201);
     }
 
-    /**
-     * @Route("/{id}", name="update_video", methods={"PUT"})
-     */
     public function put(Request $request, ValidatorInterface $validator, int $id): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
@@ -110,22 +85,4 @@ class VideoController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/{id}", name="delete_video", methods={"DELETE"})
-     */
-    public function delete(int $id): Response
-    {
-        $repository = $this->getDoctrine()->getRepository(Video::class);
-        $video = $repository->find($id);
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->remove($video);
-        $entityManager->flush();
-
-        return $this->json([
-                $video->getTitle() . ' was deleted with success!'
-            ], 
-            410
-        );
-    }
 }
