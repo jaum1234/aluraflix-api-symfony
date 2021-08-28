@@ -6,14 +6,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Category;
+use App\Entity\IOneToManyEntity;
 use App\Entity\Video;
 use App\Repository\VideoRepository;
+use Doctrine\ORM\Mapping\OneToMany;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class BaseController extends AbstractController
+abstract class BaseController extends AbstractController
 {
     protected string $class;
     
@@ -23,7 +27,7 @@ class BaseController extends AbstractController
         $resources = $repository->findAll();
 
         return $this->json([
-            'Videos were listed with success!',
+            'Resources were listed!',
             $resources
         ]);
     }
@@ -33,9 +37,38 @@ class BaseController extends AbstractController
         $resource = $resourceRepository->find($id);
         
         return $this->json([
-            'Video was found with success!',
+            'Resource was found!',
             $resource
         ]);
+    }
+
+    public function store(Request $request)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $resource = $this->saveEntity($request);
+
+        $entityManager->persist($resource);
+        $entityManager->flush();
+
+        return $this->json([
+            'Resource was created!',
+            $resource
+        ], 201);
+    }
+
+    public function put(Request $request, int $id): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $resource = $this->updateEntity($request, $id);
+
+        $entityManager->flush();
+
+        return $this->json([
+            'Resource was updated!',
+            $resource
+        ], 200);
     }
 
     public function delete(int $id): Response
@@ -43,16 +76,24 @@ class BaseController extends AbstractController
         $repository = $this->getDoctrine()->getRepository($this->class);
         $resource = $repository->find($id);
 
+        if ($resource instanceof IOneToManyEntity) {
+            $resourceWithIdOne = $repository->find(1);
+            $resource->removeEntity($resourceWithIdOne);
+        }
+
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($resource);
         $entityManager->flush();
 
         return $this->json([
-                $resource->getTitle() . ' was deleted with success!'
+                $resource->getTitle() . ' was deleted!'
             ], 
             410
         );
     }
+
+    abstract protected function saveEntity(Request $request);
+    abstract protected function updateEntity(Request $request, int $id);
 }
 
 

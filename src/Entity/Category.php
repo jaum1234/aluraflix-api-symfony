@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use App\Controller\OneToManyEntity as ControllerOneToManyEntity;
 use App\Repository\CategoryRepository;
+use App\Entity\OneToManyEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
  */
-class Category implements \JsonSerializable
+class Category implements \JsonSerializable, IOneToManyEntity
 {
     /**
      * @ORM\Id
@@ -51,9 +53,21 @@ class Category implements \JsonSerializable
         return $this->title;
     }
 
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+        return $this;
+    }
+
     public function getColor(): ?string
     {
         return $this->color;
+    }
+
+    public function setColor(string $color): self
+    {
+        $this->color = $color;
+        return $this;
     }
 
     /**
@@ -86,14 +100,6 @@ class Category implements \JsonSerializable
         return $this;
     }
 
-    public function updatePropertiesValues(array $values)
-    {
-        $this->title = $values['title'];
-        $this->color = $values['color'];
-
-        return $this;
-    }
-
     public function jsonSerialize()
     {
         return [
@@ -107,5 +113,16 @@ class Category implements \JsonSerializable
                 ],
             ]
         ];
+    }
+
+    public function removeEntity($category)
+    {
+        $videos = $this->getVideos();
+        
+        foreach ($videos as $video) {
+            $video->setCategory($category);
+        }
+
+        return $this;
     }
 }

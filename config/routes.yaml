@@ -17,7 +17,7 @@ create_video:
 update_video:
   path: /api/videos/{id}
   methods: PUT
-  controller: App\Controller\VideoController::update
+  controller: App\Controller\VideoController::put
 
 delete_video:
   path: /api/videos/{id}
@@ -43,7 +43,7 @@ create_category:
 update_category:
   path: /api/categories/{id}
   methods: PUT
-  controller: App\Controller\CategoryController::update
+  controller: App\Controller\CategoryController::put
 
 delete_category:
   path: /api/categories/{id}

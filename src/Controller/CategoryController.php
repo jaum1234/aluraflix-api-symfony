@@ -4,72 +4,48 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Controller\BaseController;
+use App\Controller\OneToManyEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CategoryController extends BaseController
 {
-
     public function __construct()
     {
         $this->class = Category::class;
     }
     
-    public function store(Request $request, ValidatorInterface $validator): Response
+    protected function saveEntity(Request $request): Category
     {
-        $entityManager = $this->getDoctrine()->getManager();
-
         $data = $request->toArray();
         $category = new Category(
             $data['title'], 
             $data['color']
         );
-
-        $errors = $validator->validate($category);
-
-        if (count($errors) > 0) {
-            $errorString = (string) $errors;
-
-            return $this->json($errorString);
-        }
         
-        $entityManager->persist($category);
-        $entityManager->flush();
-        
-        return $this->json([
-            'category was created with success!',
-            $category
-        ], 201);
+        return $category;
     }
 
     
-    public function put(Request $request, ValidatorInterface $validator, int $id): Response
+    protected function updateEntity(Request $request, int $id): Category
     {
-        $entityManager = $this->getDoctrine()->getManager();
         $repository = $this->getDoctrine()->getRepository(Category::class);
+        $category = $repository->find($id);
         
         $data = $request->toArray();
-        
-        $category = $repository->find($id);
-        $category->updatePropertiesValues($data);
 
-        $errors = $validator->validate($category);
+        $category->setTitle($data['title']);
+        $category->setColor($data['color']);
 
-        if (count($errors) > 0) {
-            $errorString = (string) $errors;
+        return $category;
+    }
 
-            return $this->json($errorString);
-        }
-
-        $entityManager->flush();
-
-        return $this->json([
-                'category was updated with success!',
-                $category
-            ], 
-        );
+    protected function removeEntity()
+    {
+        return true;
     }
 }

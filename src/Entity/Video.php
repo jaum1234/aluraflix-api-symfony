@@ -65,9 +65,21 @@ class Video implements \JsonSerializable
         return $this->title;
     }
 
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+        return $this;
+    }
+
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+        return $this;
     }
 
     public function getUrl(): ?string
@@ -75,13 +87,9 @@ class Video implements \JsonSerializable
         return $this->url;
     }
 
-    public function updatePropertiesValues(array $values, Category $category): self
+    public function setUrl(string $url): self
     {
-        $this->title = $values['title'];
-        $this->description = $values['description'];
-        $this->url = $values['url'];
-        $this->category = $category; 
-
+        $this->url = $url;
         return $this;
     }
 
@@ -104,7 +112,7 @@ class Video implements \JsonSerializable
             'title' => $this->getTitle(),
             'description' => $this->getDescription(),
             'url' => $this->getUrl(),
-            'categoryId' => $this->getCategory()->getId(),
+            'category_id' => $this->getCategory()->getId(),
             '_links' => [
                 [
                     'rel' => 'self',
