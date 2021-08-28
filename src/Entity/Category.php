@@ -115,7 +115,7 @@ class Category implements \JsonSerializable, IOneToManyEntity
         ];
     }
 
-    public function removeEntity($category)
+    public function setDefaultValuesForRelatedEntities($category)
     {
         $videos = $this->getVideos();
         

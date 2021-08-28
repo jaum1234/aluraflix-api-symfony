@@ -27,7 +27,7 @@ abstract class BaseController extends AbstractController
         $resources = $repository->findAll();
 
         return $this->json([
-            'Resources were listed!',
+            'Listed',
             $resources
         ]);
     }
@@ -37,7 +37,7 @@ abstract class BaseController extends AbstractController
         $resource = $resourceRepository->find($id);
         
         return $this->json([
-            'Resource was found!',
+            'Found',
             $resource
         ]);
     }
@@ -52,7 +52,7 @@ abstract class BaseController extends AbstractController
         $entityManager->flush();
 
         return $this->json([
-            'Resource was created!',
+            'Created',
             $resource
         ], 201);
     }
@@ -66,7 +66,7 @@ abstract class BaseController extends AbstractController
         $entityManager->flush();
 
         return $this->json([
-            'Resource was updated!',
+            'Updated',
             $resource
         ], 200);
     }
@@ -78,7 +78,7 @@ abstract class BaseController extends AbstractController
 
         if ($resource instanceof IOneToManyEntity) {
             $resourceWithIdOne = $repository->find(1);
-            $resource->removeEntity($resourceWithIdOne);
+            $resource->setDefaultValuesForRelatedEntities($resourceWithIdOne);
         }
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -86,7 +86,7 @@ abstract class BaseController extends AbstractController
         $entityManager->flush();
 
         return $this->json([
-                $resource->getTitle() . ' was deleted!'
+                $resource->getTitle() . ' deleted!'
             ], 
             410
         );

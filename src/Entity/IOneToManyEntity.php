@@ -6,5 +6,5 @@ use Doctrine\ORM\Mapping\Entity;
 
 interface IOneToManyEntity
 {
-    public function removeEntity($entity);
+    public function setDefaultValuesForRelatedEntities($entity);
 }

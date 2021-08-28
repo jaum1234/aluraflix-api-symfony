@@ -35,6 +35,11 @@ category:
   methods: GET
   controller: App\Controller\CategoryController::show
 
+videos_per_category:
+  path: /api/categories/{id}/videos
+  methods: GET
+  controller: App\Controller\CategoryController::searchVideosPerCategory
+
 create_category:
   path: /api/categories
   methods: POST
