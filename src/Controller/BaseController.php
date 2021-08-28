@@ -21,8 +21,12 @@ abstract class BaseController extends AbstractController
 {
     protected string $class;
     
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        if ($request->query->has('q')) {
+            return $this->json("OK");
+        }
+
         $repository = $this->getDoctrine()->getRepository($this->class);
         $resources = $repository->findAll();
 
