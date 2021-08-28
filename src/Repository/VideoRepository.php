@@ -19,17 +19,17 @@ class VideoRepository extends ServiceEntityRepository
         parent::__construct($registry, Video::class);
     }
 
-    public function findOneByIdJoinedToCategory(int $videoId): ?Video
+    public function findByQueryParameter($queryParameter)
     {
-        $entityManager = $this->getEntityManager();
+        $queryBuilder = $this->createQueryBuilder('r');
+        $queryBuilder->where(
+                $queryBuilder
+                    ->expr()
+                    ->like('r.title', ':queryParameter')
+                )
+            ->setParameter('queryParameter', '%' . $queryParameter . '%');
 
-        $query = $entityManager->createQuery(
-            'SELECT v, c
-            FROM App\Entity\Video v
-            INNER JOIN v.category c
-            WHERE v.id = :id'
-        )->setParameter('id', $videoId);
-
-        return $query->getOneOrNullResult();
+        $query = $queryBuilder->getQuery();
+        return $query->execute();
     }
 }

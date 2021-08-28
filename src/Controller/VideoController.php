@@ -17,10 +17,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class VideoController extends BaseController
 {
+    protected $repository;
 
-    public function __construct()
+    public function __construct(VideoRepository $repository)
     {
         $this->class = Video::class;
+        $this->repository = $repository;
     }
    
     protected function saveEntity(Request $request)
@@ -28,19 +30,20 @@ class VideoController extends BaseController
         $repository = $this->getDoctrine()->getRepository(Category::class);
         
         $data = $request->toArray();
-        $categoryId = $data['category_id']; 
-        if (is_null($categoryId)) {
-            $categoryId = 1;
+
+        if (!array_key_exists('category_id', $data)) {
+            $category = $repository->find(1);
+        } else {
+            $category = $repository->find($data['category_id']);
         }
-        $category = $repository->find($categoryId);
-        
+    
         $video = new Video(
             $data['title'], 
             $data['description'], 
             $data['url'],
             $category
         );
-        
+
         return $video;
     }
 

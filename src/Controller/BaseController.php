@@ -23,8 +23,14 @@ abstract class BaseController extends AbstractController
     
     public function index(Request $request): Response
     {
+
         if ($request->query->has('q')) {
-            return $this->json("OK");
+            $queryParameter = $request->query->get('q');
+            $resources = $this->repository->findByQueryParameter($queryParameter);
+            return $this->json([
+                'Found',
+                $resources
+            ], 200);
         }
 
         $repository = $this->getDoctrine()->getRepository($this->class);
@@ -36,9 +42,11 @@ abstract class BaseController extends AbstractController
         ]);
     }
 
-    public function show(VideoRepository $resourceRepository, int $id): Response
+    public function show(int $id): Response
     {
-        $resource = $resourceRepository->find($id);
+        $repository = $this->getDoctrine()
+            ->getRepository($this->class);
+        $resource = $repository->find($id);
         
         return $this->json([
             'Found',
@@ -49,7 +57,7 @@ abstract class BaseController extends AbstractController
     public function store(Request $request)
     {
         $entityManager = $this->getDoctrine()->getManager();
-
+    
         $resource = $this->saveEntity($request);
 
         $entityManager->persist($resource);
