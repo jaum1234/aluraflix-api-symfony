@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
  */
-class Category implements \JsonSerializable, IOneToManyEntity
+class Category implements \JsonSerializable, IRelatedEntitiesCantBeDeleted
 {
     /**
      * @ORM\Id

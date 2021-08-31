@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Category;
-use App\Entity\IOneToManyEntity;
+use App\Entity\IRelatedEntitiesCantBeDeleted;
 use App\Entity\Video;
 use App\Repository\VideoRepository;
 use Doctrine\ORM\Mapping\OneToMany;
@@ -88,7 +88,7 @@ abstract class BaseController extends AbstractController
         $repository = $this->getDoctrine()->getRepository($this->class);
         $resource = $repository->find($id);
 
-        if ($resource instanceof IOneToManyEntity) {
+        if ($resource instanceof IRelatedEntitiesCantBeDeleted) {
             $resourceWithIdOne = $repository->find(1);
             $resource->setDefaultValuesForRelatedEntities($resourceWithIdOne);
         }
