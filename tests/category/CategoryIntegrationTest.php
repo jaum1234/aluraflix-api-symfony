@@ -4,9 +4,11 @@ namespace App\Tests;
 
 use App\Entity\Category;
 use Doctrine\ORM\EntityManager;
+use App\Repository\CategoryRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class CategoryTest extends KernelTestCase
+class CategoryIntegrationTest extends KernelTestCase
 {
     private $entityManager;
 
@@ -27,34 +29,9 @@ class CategoryTest extends KernelTestCase
         $this->assertEquals('color', $category->getColor());
     }
 
-    public function testMustUpdateACategory()
-    {
-        $category = new Category('title', 'color');
-
-        $category->setTitle('New title');
-        $category->setColor('red');
-
-        $this->assertEquals('New title', $category->getTitle());
-        $this->assertEquals('red', $category->getColor());
-    }
-
-    public function testMustFetchOneCategory()
-    {
-        $category = new Category('title', 'color');
-
-        $this->entityManager->persist($category);
-        $this->entityManager->flush();
-        
-        $categoryRecord = $this->entityManager
-            ->getRepository(Category::class)
-            ->find($category->getId());
-
-        $this->assertSame($category->getTitle(), $categoryRecord->getTitle());
-        $this->assertSame($category->getColor(), $categoryRecord->getColor());
-    }
-
     public function testMustFetchAllCategories()
     {
+
         $category = new Category('title', 'color');
         $category2 = new Category('title2', 'color2');
         $category3 = new Category('title3', 'color3');
@@ -76,6 +53,7 @@ class CategoryTest extends KernelTestCase
             ->findAll();
 
         $this->assertCount(6, $categoryRecords);
+
         $this->assertEquals($category->getTitle(), $categoryRecords[0]->getTitle());
         $this->assertEquals($category->getColor(), $categoryRecords[0]->getColor());
         $this->assertEquals($category2->getTitle(), $categoryRecords[1]->getTitle());
@@ -136,7 +114,6 @@ class CategoryTest extends KernelTestCase
         ->getRepository(Category::class)
         ->find($category->getId());
         
-
         $this->assertEquals('New title', $categoryRecord->getTitle());
         $this->assertEquals('New color', $categoryRecord->getColor());
     }

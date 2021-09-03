@@ -30,7 +30,7 @@ abstract class BaseController extends AbstractController
             return $this->json([
                 'Found',
                 $resources
-            ], 200);
+            ]);
         }
 
         $repository = $this->getDoctrine()->getRepository($this->class);
