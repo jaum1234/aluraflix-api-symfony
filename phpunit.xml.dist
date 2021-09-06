@@ -18,6 +18,10 @@
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled" />
     </php>
 
+    <logging>
+        <testdoxText outputFile="testdox.txt"/>
+    </logging>
+
     <testsuites>
         <testsuite name="Project Test Suite">
             <directory>tests</directory>

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Controller\OneToManyEntity as ControllerOneToManyEntity;
 use App\Repository\CategoryRepository;
 use App\Entity\OneToManyEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,11 +24,13 @@ class Category implements \JsonSerializable, IRelatedEntitiesCantBeDeleted
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank(message="Title shoud not be empty")
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank(message="Color should not be empty")
      */
     private $color;
 

@@ -1,0 +1,3 @@
+Category (App\Tests\Category)
+ [x] Must set defaut category to related entities
+

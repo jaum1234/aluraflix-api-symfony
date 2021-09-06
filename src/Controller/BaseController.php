@@ -9,6 +9,8 @@ use App\Entity\Category;
 use App\Entity\IRelatedEntitiesCantBeDeleted;
 use App\Entity\Video;
 use App\Repository\VideoRepository;
+use App\Service\ResourcesValidator;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\OneToMany;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -33,8 +35,7 @@ abstract class BaseController extends AbstractController
             ]);
         }
 
-        $repository = $this->getDoctrine()->getRepository($this->class);
-        $resources = $repository->findAll();
+        $resources = $this->repository->findAll();
 
         return $this->json([
             'Listed',
@@ -54,11 +55,17 @@ abstract class BaseController extends AbstractController
         ]);
     }
 
-    public function store(Request $request)
-    {
-        $entityManager = $this->getDoctrine()->getManager();
-    
+    public function store(Request $request, ResourcesValidator $validator, EntityManagerInterface $entityManager)
+    {    
         $resource = $this->saveEntity($request);
+
+        $validation = $validator->validate($resource);
+
+        if (!$validation['success']) {
+            return $this->json([
+                'errors' => $validation['errors'][0]
+            ]);
+        }
 
         $entityManager->persist($resource);
         $entityManager->flush();
@@ -69,11 +76,22 @@ abstract class BaseController extends AbstractController
         ], 201);
     }
 
-    public function put(Request $request, int $id): Response
+    public function put(
+        Request $request, 
+        ResourcesValidator $validator, 
+        int $id, 
+        EntityManagerInterface $entityManager
+        ): Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
-
         $resource = $this->updateEntity($request, $id);
+
+        $validation = $validator->validate($resource);
+
+        if (!$validation['success']) {
+            return $this->json([
+                'errors' => $validation['errors'][0]
+            ]);
+        }
 
         $entityManager->flush();
 
@@ -83,7 +101,7 @@ abstract class BaseController extends AbstractController
         ], 200);
     }
 
-    public function delete(int $id): Response
+    public function delete(int $id, EntityManagerInterface $entityManager): Response
     {
         $repository = $this->getDoctrine()->getRepository($this->class);
         $resource = $repository->find($id);
@@ -93,7 +111,6 @@ abstract class BaseController extends AbstractController
             $resource->setDefaultValuesForRelatedEntities($resourceWithIdOne);
         }
 
-        $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($resource);
         $entityManager->flush();
 

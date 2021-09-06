@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Controller\BaseController;
 use App\Controller\OneToManyEntity;
+use App\Repository\CategoryRepository;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,9 +16,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CategoryController extends BaseController
 {
-    public function __construct()
+    protected $repository;
+
+    public function __construct(CategoryRepository $repository)
     {
         $this->class = Category::class;
+        $this->repository = $repository;
     }
     
     protected function saveEntity(Request $request): Category
@@ -35,8 +39,8 @@ class CategoryController extends BaseController
     
     protected function updateEntity(Request $request, int $id): Category
     {
-        $repository = $this->getDoctrine()->getRepository(Category::class);
-        $category = $repository->find($id);
+    
+        $category = $this->repository->find($id);
         
         $data = $request->toArray();
 
@@ -48,11 +52,9 @@ class CategoryController extends BaseController
 
     public function searchVideosPerCategory(int $id)
     {
-        $repository = $this->getDoctrine()
-            ->getRepository(Category::class);
-
+      
         try {
-            $category = $repository->find($id);
+            $category = $this->repository->find($id);
             if (is_null($category)) throw new Exception();
         } catch (\Exception $e) {
             return $this->json('No category with id ' . $id . ' found.');

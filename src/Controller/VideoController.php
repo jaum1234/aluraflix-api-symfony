@@ -49,13 +49,12 @@ class VideoController extends BaseController
 
     public function updateEntity(Request $request, int $id)
     {
-        $videoRepository = $this->getDoctrine()->getRepository(Video::class);
-        $cateogoryRepository = $this->getDoctrine()->getRepository(Category::class);
+        $categoryRepository = $this->getDoctrine()->getRepository(Category::class);
  
         $data = $request->toArray();
-        $category = $cateogoryRepository->find($data['category_id']);
+        $category = $categoryRepository->find($data['category_id']);
         
-        $video = $videoRepository->find($id);
+        $video = $this->repository->find($id);
 
         $video->setTitle("New Title");
         $video->setDescription("New Description");
