@@ -10,7 +10,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validation;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use ApiPlatform\Core\Bridge\Symfony\Validator\Validator;
-use Doctrine\Persistence\ObjectManager;
 
 class CategoryTest extends KernelTestCase
 {

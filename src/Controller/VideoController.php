@@ -31,11 +31,7 @@ class VideoController extends BaseController
         
         $data = $request->toArray();
 
-        if (!array_key_exists('category_id', $data)) {
-            $category = $repository->find(1);
-        } else {
-            $category = $repository->find($data['category_id']);
-        }
+        $category = $this->findCategoryByCategoryId($data, $repository);
     
         $video = new Video(
             $data['title'], 
@@ -45,6 +41,17 @@ class VideoController extends BaseController
         );
 
         return $video;
+    }
+
+    private function findCategoryByCategoryId($request, $repository)
+    {
+        if (!array_key_exists('category_id', $request)) {
+            $category = $repository->find(1);
+        } else {
+            $category = $repository->find($request['category_id']);
+        }
+
+        return $category;
     }
 
     public function updateEntity(Request $request, int $id)

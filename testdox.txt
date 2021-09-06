@@ -1,3 +1,7 @@
-Category (App\Tests\Category)
- [x] Must set defaut category to related entities
+Video (App\Tests\Video)
+ [x] Must validate a video with data set "Succeeds when data is correct"
+ [x] Must validate a video with data set "Fails when 'title' is missing"
+ [x] Must validate a video with data set "Fails when 'description' is missing"
+ [x] Must validate a video with data set "Fails when 'url' is missing"
+ [x] Must validate a video with data set "Fails when 'url' is invalid"
 
