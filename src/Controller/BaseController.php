@@ -25,15 +25,19 @@ abstract class BaseController extends AbstractController
     
     public function index(Request $request): Response
     {
-
-        if ($request->query->has('q')) {
-            $queryParameter = $request->query->get('q');
-            $resources = $this->repository->findByQueryParameter($queryParameter);
-            return $this->json([
-                'Found',
-                $resources
-            ]);
+        try {
+            if ($request->query->has('q')) {
+                $queryParameter = $request->query->get('q');
+                $resources = $this->repository->findByQueryParameter($queryParameter);
+                return $this->json([
+                    'Found',
+                    $resources
+                ]);
+            }
+        } catch (\Doctrine\ORM\ORMException $th) {
+            return $this->json(['ERROR' => 'This entity does not support searches by query parameter.']);
         }
+
 
         $resources = $this->repository->findAll();
 
@@ -42,6 +46,7 @@ abstract class BaseController extends AbstractController
             $resources
         ]);
     }
+    
 
     public function show(int $id): Response
     {
