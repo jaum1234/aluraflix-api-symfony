@@ -22,7 +22,7 @@ class VideoRepositoryTest extends KernelTestCase
 
     }
     
-    public function testMustlistAllVideos(): void
+    public function testMustlistAllVideos()
     {
         //Arrange
         $category = new Category('title', 'color');

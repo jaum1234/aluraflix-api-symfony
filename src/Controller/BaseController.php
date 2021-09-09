@@ -34,7 +34,7 @@ abstract class BaseController extends AbstractController
                     $resources
                 ]);
             }
-        } catch (\Doctrine\ORM\ORMException $th) {
+        } catch (\Doctrine\ORM\ORMException $e) {
             return $this->json(['ERROR' => 'This entity does not support searches by query parameter.']);
         }
 

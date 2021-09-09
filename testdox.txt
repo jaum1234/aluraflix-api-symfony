@@ -1,4 +1,7 @@
-Video Repository (App\Tests\VideoRepository)
- [x] Must fetch videos by query parameter with data set #0
- [x] Must fetch videos by query parameter with data set #1
+Video (App\Tests\Video)
+ [x] Must validate a video with data set "Succeeds when data is correct"
+ [x] Must validate a video with data set "Fails when 'title' is missing"
+ [x] Must validate a video with data set "Fails when 'description' is missing"
+ [x] Must validate a video with data set "Fails when 'url' is missing"
+ [x] Must validate a video with data set "Fails when 'url' is invalid"
 
