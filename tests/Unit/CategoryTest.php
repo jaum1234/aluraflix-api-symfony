@@ -16,7 +16,7 @@ class CategoryTest extends KernelTestCase
     public function testMustCreateACategory(): void
     {
         //Arrange & Act
-        $category = new Category('title', 'color');
+        $category = Category::build('title', 'color');
 
         //Assert
         $this->assertEquals('title', $category->getTitle());
@@ -26,7 +26,7 @@ class CategoryTest extends KernelTestCase
     public function testMustUpdateACategory()
     {
         //Arrange
-        $category = new Category('title', 'color');
+        $category = Category::build('title', 'color');
 
         //Act
         $category->setTitle('New title');
@@ -40,9 +40,9 @@ class CategoryTest extends KernelTestCase
     public function testMustRelateVideosToACategory()
     {
         //Arrange
-        $category = new Category('title', 'color');
-        $video1 = new Video('video 1', 'description 1', 'http://url1.com', $category);
-        $video2 = new Video('video 2', 'description 2', 'http://url2.com', $category);
+        $category = Category::build('title', 'color');
+        $video1 = Video::build('video 1', 'description 1', 'http://url1.com', $category);
+        $video2 = Video::build('video 2', 'description 2', 'http://url2.com', $category);
         
         //Act
         $category->addVideo($video1);
@@ -67,7 +67,7 @@ class CategoryTest extends KernelTestCase
     public function testCategoryMustBeValidated(int $expectedErros, string $title, string $color)
     {
         //Arrange
-        $category = new Category($title, $color);
+        $category = Category::build($title, $color);
 
         $validator = Validation::createValidatorBuilder()
             ->enableAnnotationMapping()
@@ -83,9 +83,9 @@ class CategoryTest extends KernelTestCase
     public function testMustSetDefautCategoryToRelatedEntities()
     {
         //Arrange
-        $defaultCategory =  new Category('default title', 'default color');
-        $category = new Category('title', 'color');
-        $video = new Video('video', 'description', 'http://url.com', $category);
+        $defaultCategory =  Category::build('default title', 'default color');
+        $category = Category::build('title', 'color');
+        $video = Video::build('video', 'description', 'http://url.com', $category);
         $category->addVideo($video);
 
         //Act

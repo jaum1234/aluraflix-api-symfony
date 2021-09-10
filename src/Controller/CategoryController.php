@@ -16,12 +16,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CategoryController extends BaseController
 {
-    protected $repository;
-
     public function __construct(CategoryRepository $repository)
     {
-        $this->class = Category::class;
         $this->repository = $repository;
+        $this->class = Category::class;
     }
     
     protected function saveEntity(Request $request): Category

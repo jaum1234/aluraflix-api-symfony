@@ -19,8 +19,10 @@ class CategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, Category::class);
     }
 
-    public function add()
+    public function add($data)
     {
-        
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($data);
+        $entityManager->flush();
     }
 }

@@ -1,4 +1,6 @@
 Video (App\Tests\Video)
+ [x] Must create a video
+ [x] Must update a video
  [x] Must validate a video with data set "Succeeds when data is correct"
  [x] Must validate a video with data set "Fails when 'title' is missing"
  [x] Must validate a video with data set "Fails when 'description' is missing"

@@ -22,6 +22,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 abstract class BaseController extends AbstractController
 {
     protected string $class;
+    protected $repository;
     
     public function index(Request $request): Response
     {
@@ -72,8 +73,7 @@ abstract class BaseController extends AbstractController
             ]);
         }
 
-        $entityManager->persist($resource);
-        $entityManager->flush();
+        $this->repository->add($resource);
 
         return $this->json([
             'Created',

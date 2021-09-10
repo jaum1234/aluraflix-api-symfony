@@ -19,15 +19,14 @@ class VideoRepositoryTest extends KernelTestCase
         $this->entityManager = $kernel->getContainer()
         ->get('doctrine')
         ->getManager();
-
     }
     
     public function testMustlistAllVideos()
     {
         //Arrange
-        $category = new Category('title', 'color');
-        $video1 = new Video('title', 'description', 'http://url.com', $category);
-        $video2 = new Video('title2', 'description2', 'http://url2.com', $category);
+        $category = Category::build('title', 'color');
+        $video1 = Video::build('title', 'description', 'http://url.com', $category);
+        $video2 = Video::build('title2', 'description2', 'http://url2.com', $category);
     
         $this->entityManager->persist($category);
         $this->entityManager->persist($video1);
@@ -53,8 +52,8 @@ class VideoRepositoryTest extends KernelTestCase
     public function testMustFetchOneVideo()
     {
         //Arrange
-        $category = new Category('title', 'color');
-        $video = new Video('title', 'description', 'http://url.com', $category);
+        $category = Category::build('title', 'color');
+        $video = Video::build('title', 'description', 'http://url.com', $category);
         $this->entityManager->persist($category);
         $this->entityManager->persist($video);
         $this->entityManager->flush();
@@ -77,8 +76,8 @@ class VideoRepositoryTest extends KernelTestCase
     public function testMustFetchVideosByQueryParameter(string $queryParameter, string $title, string $description, string $url, Category $category)
     {
         //Arrange
-        $video1 = new Video('title', 'description', 'http://url.com', $category);
-        $video2 = new Video('title2', 'description2', 'http://url2.com', $category);
+        $video1 = Video::build('title', 'description', 'http://url.com', $category);
+        $video2 = Video::build('title2', 'description2', 'http://url2.com', $category);
     
         $this->entityManager->persist($category);
         $this->entityManager->persist($video1);
@@ -98,7 +97,7 @@ class VideoRepositoryTest extends KernelTestCase
 
     public function dataForQueringByQueryParameter()
     {
-        $category = new Category('title', 'color');
+        $category = Category::build('title', 'color');
 
         return [
             ['title', 'title', 'description', 'http://url.com', $category],

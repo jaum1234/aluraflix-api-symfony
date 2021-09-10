@@ -44,17 +44,6 @@ class Video implements \JsonSerializable
      */
     private $category;
 
-    
-
-    public function __construct(string $title, string $description, string $url, Category $category)
-    {
-        $this->title = $title;
-        $this->description = $description;
-        $this->url = $url;
-        $this->category = $category;
-        
-    }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -103,6 +92,15 @@ class Video implements \JsonSerializable
         $this->category = $category;
 
         return $this;
+    }
+
+    public static function build(string $title, string $description, string $url, Category $category)
+    {
+        return (new Video())
+            ->setTitle($title)
+            ->setDescription($description)
+            ->setUrl($url)
+            ->setCategory($category);
     }
 
     public function jsonSerialize()

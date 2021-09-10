@@ -8,27 +8,42 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class CategoryRepositoryTest extends KernelTestCase
 {
     private $entityManager;
-
+    
     public function setUp(): void
     {
         $kernel = self::bootKernel();
-
+        
         $this->entityManager = $kernel->getContainer()
         ->get('doctrine')
         ->getManager();
     }
 
+    public function testMustAddACategoryToRepository()
+    {
+        //Arrange
+        $category = Category::build('title', 'color');
+        $categoryRepository = $this->entityManager->getRepository(Category::class);
+    
+        //Act
+        $categoryRepository->add($category);
+        $id = $category->getId();
+        $categoryRecord = $categoryRepository->find($id);
+    
+        //Assert
+        $this->assertEquals('title', $categoryRecord->getTitle());
+        $this->assertEquals('color', $categoryRecord->getColor());
+    }
+    
     public function testMustlistAllCategories()
     {
         //Arrange
-        $category = new Category('title', 'color');
-        $category2 = new Category('title2', 'color2');
-        $this->entityManager->persist($category);
-        $this->entityManager->persist($category2);
-        $this->entityManager->flush();
+        $category = Category::build('title', 'color');
+        $category2 = Category::build('title2', 'color2');
+        $categoryRepository = $this->entityManager->getRepository(Category::class);
+        $categoryRepository->add($category);
+        $categoryRepository->add($category2);
 
         //Act
-        $categoryRepository = $this->entityManager->getRepository(Category::class);
         $categories = $categoryRepository->findAll();
 
         //Assert
@@ -42,17 +57,16 @@ class CategoryRepositoryTest extends KernelTestCase
     public function testMustFetchOneCategory()
     {
         //Arrange
-        $category = new Category('title', 'color');
-        $category2 = new Category('title2', 'color2');
-        $this->entityManager->persist($category);
-        $this->entityManager->persist($category2);
-        $this->entityManager->flush();
+        $category = Category::build('title', 'color');
+        $category2 = Category::build('title2', 'color2');
+        $categoryRepository = $this->entityManager->getRepository(Category::class);
+        $categoryRepository->add($category);
+        $categoryRepository->add($category2);
 
         $id = $category->getId();
         $id2 = $category2->getId();
 
         //Act
-        $categoryRepository = $this->entityManager->getRepository(Category::class);
         $category = $categoryRepository->find($id);
         $category2 = $categoryRepository->find($id2);
 
@@ -70,12 +84,11 @@ class CategoryRepositoryTest extends KernelTestCase
         $this->expectException(\Doctrine\ORM\ORMException::class);
         
         //Arrange
-        $category = new Category('title', 'color');
-        $this->entityManager->persist($category);
-        $this->entityManager->flush();
-        
-        //act
+        $category = Category::build('title', 'color');
         $categoryRepository = $this->entityManager->getRepository(Category::class);
+        $categoryRepository->add($category);
+               
+        //Act
         $category = $categoryRepository->findByQueryParameter('title');
     }
 
@@ -83,7 +96,6 @@ class CategoryRepositoryTest extends KernelTestCase
     {
         parent::tearDown();
 
-        // doing this is recommended to avoid memory leaks
         $this->entityManager->close();
         $this->entityManager = null;
     }

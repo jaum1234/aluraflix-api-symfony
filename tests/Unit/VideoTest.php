@@ -12,8 +12,8 @@ class VideoTest extends KernelTestCase
     public function testMustCreateAVideo()
     {
         //Arrange and Act
-        $category = new Category('title', 'color');
-        $video = new Video('title', 'description', 'http://url.com', $category);
+        $category = Category::build('title', 'color');
+        $video = Video::build('title', 'description', 'http://url.com', $category);
 
         //Assert
         $this->assertEquals('title', $video->getTitle());
@@ -25,9 +25,9 @@ class VideoTest extends KernelTestCase
     public function testMustUpdateAVideo()
     {
         //Arrange
-        $category = new Category('title', 'color');
-        $category2 = new Category('title2', 'color2');
-        $video = new Video('title', 'description', 'http://url.com', $category);
+        $category = Category::build('title', 'color');
+        $category2 = Category::build('title2', 'color2');
+        $video = Video::build('title', 'description', 'http://url.com', $category);
 
         //Act
         $video->setTitle('title updated');
@@ -51,14 +51,14 @@ class VideoTest extends KernelTestCase
         string $description, 
         string $url,
         Category $category
-        )
-    {
-         //Arrange
-         $video = new Video($title, $description, $url, $category);
+    ) {
+        
+        //Arrange
+        $video = Video::build($title, $description, $url, $category);
 
-         $validator = Validation::createValidatorBuilder()
-            ->enableAnnotationMapping()
-            ->getValidator();
+        $validator = Validation::createValidatorBuilder()
+        ->enableAnnotationMapping()
+        ->getValidator();
 
         //Act
         $errors = $validator->validate($video);
@@ -69,7 +69,7 @@ class VideoTest extends KernelTestCase
 
     public function dataForValidator()
     {
-        $category = new Category('title', 'color');
+        $category = Category::build('title', 'color');
 
         return [
             "Succeeds when data is correct" => [0, 'title', 'description', 'http://url.com', $category],

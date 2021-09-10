@@ -39,10 +39,8 @@ class Category implements \JsonSerializable, IRelatedEntitiesCantBeDeleted
      */
     private $videos;
 
-    public function __construct(string $title, string $color)
+    public function __construct()
     {
-        $this->title = $title;
-        $this->color = $color;
         $this->videos = new ArrayCollection();
     }
 
@@ -103,6 +101,24 @@ class Category implements \JsonSerializable, IRelatedEntitiesCantBeDeleted
         return $this;
     }
 
+    public static function build(string $title, string $color)
+    {
+        return (new Category())
+            ->setTitle($title)
+            ->setColor($color);
+    }
+
+    public function setDefaultValuesForRelatedEntities($category)
+    {
+        $videos = $this->getVideos();
+        
+        foreach ($videos as $video) {
+            $video->setCategory($category);
+        }
+
+        return $this;
+    }
+
     public function jsonSerialize()
     {
         return [
@@ -118,14 +134,4 @@ class Category implements \JsonSerializable, IRelatedEntitiesCantBeDeleted
         ];
     }
 
-    public function setDefaultValuesForRelatedEntities($category)
-    {
-        $videos = $this->getVideos();
-        
-        foreach ($videos as $video) {
-            $video->setCategory($category);
-        }
-
-        return $this;
-    }
 }
