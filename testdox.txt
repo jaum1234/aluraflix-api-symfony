@@ -1,6 +1,4 @@
-Category Repository (App\Tests\CategoryRepository)
- [x] Must add a category to repository
- [x] Mustlist all categories
- [x] Must fetch one category
- [x] Must throw exception if user tries to query category by query paramter
+Base Controller (App\Tests\BaseController)
+ [x] Request must create an entity successfully with data set "category"
+ [ ] Request must create an entity successfully with data set "video"
 
