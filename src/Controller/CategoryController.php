@@ -25,7 +25,6 @@ class CategoryController extends BaseController
     protected function saveEntity(Request $request): Category
     {
         $data = $request->toArray();
-        
         $category = Category::build($data['title'], $data['color']);
         
         return $category;
