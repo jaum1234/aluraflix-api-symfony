@@ -13,6 +13,7 @@
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/doctrine-migrations-bundle": "^3.1",
         "doctrine/orm": "^2.9",
+        "guzzlehttp/guzzle": "7.0",
         "nelmio/cors-bundle": "^2.1",
         "phpdocumentor/reflection-docblock": "^5.2",
         "symfony/asset": "5.3.*",
@@ -79,12 +80,14 @@
     "require-dev": {
         "dama/doctrine-test-bundle": "^6.6",
         "doctrine/doctrine-fixtures-bundle": "^3.4",
+        "hautelook/alice-bundle": "^2.9",
         "phpunit/phpunit": "^9.5",
         "symfony/browser-kit": "5.3.*",
         "symfony/css-selector": "^5.3",
         "symfony/debug-bundle": "5.3.*",
         "symfony/http-client": "5.3.*",
         "symfony/maker-bundle": "^1.33",
+        "symfony/panther": "^1.1",
         "symfony/phpunit-bridge": "^5.3"
     }
 }

@@ -32,4 +32,11 @@ class VideoRepository extends ServiceEntityRepository
         $query = $queryBuilder->getQuery();
         return $query->execute();
     }
+
+    public function add($data)
+    {
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($data);
+        $entityManager->flush();
+    }
 }

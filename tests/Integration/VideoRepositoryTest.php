@@ -20,6 +20,33 @@ class VideoRepositoryTest extends KernelTestCase
         ->get('doctrine')
         ->getManager();
     }
+
+    public function testMustAddAVideoToRepository()
+    {
+        //Arrange
+        $category = Category::build('title', 'color');
+        $categoryRepository = $this->entityManager->getRepository(Category::class);
+        $categoryRepository->add($category);
+        
+        $video = Video::build(
+            'title', 
+            'description', 
+            'http://url.com', 
+            $category
+        );
+        $videoRepository = $this->entityManager->getRepository(Video::class);
+        
+        //Act
+        $videoRepository->add($video);
+        $id = $video->getId();
+        $videoRecord = $videoRepository->find($id);
+
+        //Assert
+        $this->assertEquals('title', $videoRecord->getTitle());
+        $this->assertEquals('description', $videoRecord->getDescription());
+        $this->assertEquals('http://url.com', $videoRecord->getUrl());
+        $this->assertEquals($category, $videoRecord->getCategory());
+    }
     
     public function testMustlistAllVideos()
     {
@@ -47,6 +74,8 @@ class VideoRepositoryTest extends KernelTestCase
         $this->assertEquals('description2', $videos[1]->getDescription());
         $this->assertEquals('http://url2.com', $videos[1]->getUrl());
         $this->assertEquals($category, $videos[1]->getCategory());
+
+
     }
 
     public function testMustFetchOneVideo()

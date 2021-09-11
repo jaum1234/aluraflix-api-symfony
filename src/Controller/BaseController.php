@@ -70,7 +70,7 @@ abstract class BaseController extends AbstractController
         if (!$validation['success']) {
             return $this->json([
                 'errors' => $validation['errors'][0]
-            ]);
+            ], Response::HTTP_BAD_REQUEST);
         }
 
         $this->repository->add($resource);
@@ -78,7 +78,7 @@ abstract class BaseController extends AbstractController
         return $this->json([
             'Created',
             $resource
-        ], 201);
+        ], Response::HTTP_CREATED);
     }
 
     public function put(
@@ -103,7 +103,7 @@ abstract class BaseController extends AbstractController
         return $this->json([
             'Updated',
             $resource
-        ], 200);
+        ], Response::HTTP_OK);
     }
 
     public function delete(int $id, EntityManagerInterface $entityManager): Response

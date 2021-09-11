@@ -33,7 +33,7 @@ class VideoController extends BaseController
 
         $category = $this->findCategoryByCategoryId($data, $repository);
     
-        $video = new Video(
+        $video = Video::build(
             $data['title'], 
             $data['description'], 
             $data['url'],

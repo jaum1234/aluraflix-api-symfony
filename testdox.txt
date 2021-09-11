@@ -1,9 +1,6 @@
-Video (App\Tests\Video)
- [x] Must create a video
- [x] Must update a video
- [x] Must validate a video with data set "Succeeds when data is correct"
- [x] Must validate a video with data set "Fails when 'title' is missing"
- [x] Must validate a video with data set "Fails when 'description' is missing"
- [x] Must validate a video with data set "Fails when 'url' is missing"
- [x] Must validate a video with data set "Fails when 'url' is invalid"
+Category Repository (App\Tests\CategoryRepository)
+ [x] Must add a category to repository
+ [x] Mustlist all categories
+ [x] Must fetch one category
+ [x] Must throw exception if user tries to query category by query paramter
 

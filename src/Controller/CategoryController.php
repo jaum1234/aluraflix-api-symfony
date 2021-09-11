@@ -26,10 +26,7 @@ class CategoryController extends BaseController
     {
         $data = $request->toArray();
         
-        $category = new Category(
-            $data['title'], 
-            $data['color']
-        );
+        $category = Category::build($data['title'], $data['color']);
         
         return $category;
     }
