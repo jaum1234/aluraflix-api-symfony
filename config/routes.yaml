@@ -1,4 +1,18 @@
+api_login: 
+  path: /api/auth/login
+  methods: POST
+
+api_register:
+  path: /api/auth/register
+  methods: POST
+  controller: App\Controller\AuthController::register
+
 #videos
+free_video:
+  path: /api/videos/free
+  methods: GET
+  controller: App\Controller\VideoController::free
+
 videos:
   path: /api/videos
   methods: GET
@@ -23,6 +37,8 @@ delete_video:
   path: /api/videos/{id}
   methods: DELETE
   controller: App\Controller\VideoController::delete
+
+
 
 #categories
 categories:

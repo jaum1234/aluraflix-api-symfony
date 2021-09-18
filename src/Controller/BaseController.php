@@ -2,29 +2,31 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\Video;
+use App\Entity\Category;
+use Psr\Log\LoggerInterface;
+use App\Repository\VideoRepository;
+use App\Service\ResourcesPaginator;
+use App\Service\ResourcesValidator;
+use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Validator\Validation;
+use App\Entity\IRelatedEntitiesCantBeDeleted;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\Category;
-use App\Entity\IRelatedEntitiesCantBeDeleted;
-use App\Entity\Video;
-use App\Repository\VideoRepository;
-use App\Service\ResourcesValidator;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\OneToMany;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 abstract class BaseController extends AbstractController
 {
     protected string $class;
     protected $repository;
-    
-    public function index(Request $request): Response
+
+    public function index(PaginatorInterface $paginatorInterface, Request $request): Response
     {
         try {
             if ($request->query->has('q')) {
@@ -38,13 +40,14 @@ abstract class BaseController extends AbstractController
         } catch (\Doctrine\ORM\ORMException $e) {
             return $this->json(['ERROR' => 'This entity does not support searches by query parameter.']);
         }
-
-
-        $resources = $this->repository->findAll();
+    
+        $currentPage = $request->query->getInt('page', 1);
+        $paginationData = $this->repository->paginate($paginatorInterface, $currentPage);
 
         return $this->json([
-            'Listed',
-            $resources
+            'Status' => 'Listed',
+            'Page info' => $paginationData['Page'],
+            'Resources' => $paginationData['Resources'],
         ]);
     }
     
@@ -82,10 +85,10 @@ abstract class BaseController extends AbstractController
     }
 
     public function put(
-        Request $request, 
+        EntityManagerInterface $entityManager,
         ResourcesValidator $validator, 
-        int $id, 
-        EntityManagerInterface $entityManager
+        Request $request, 
+        int $id
         ): Response
     {
         $resource = $this->updateEntity($request, $id);
@@ -108,11 +111,10 @@ abstract class BaseController extends AbstractController
 
     public function delete(int $id, EntityManagerInterface $entityManager): Response
     {
-        $repository = $this->getDoctrine()->getRepository($this->class);
-        $resource = $repository->find($id);
+        $resource = $this->repository->find($id);
 
         if ($resource instanceof IRelatedEntitiesCantBeDeleted) {
-            $resourceWithIdOne = $repository->find(1);
+            $resourceWithIdOne = $this->repository->find(1);
             $resource->setDefaultValuesForRelatedEntities($resourceWithIdOne);
         }
 

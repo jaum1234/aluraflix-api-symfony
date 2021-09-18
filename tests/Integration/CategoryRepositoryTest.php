@@ -3,6 +3,7 @@
 namespace App\Tests;
 
 use App\Entity\Category;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class CategoryRepositoryTest extends KernelTestCase
@@ -90,6 +91,28 @@ class CategoryRepositoryTest extends KernelTestCase
                
         //Act
         $category = $categoryRepository->findByQueryParameter('title');
+    }
+
+    public function testMustPaginateCategories()
+    {
+        //Arrange
+        $category = Category::build('title', 'color');
+        $category2 = Category::build('title2', 'color2');
+
+        $categoryRepository = $this->entityManager->getRepository(Category::class)
+            ->add($category)
+            ->add($category2);
+
+        //Act
+        $container = static::getContainer();
+        $paginator = $container->get(PaginatorInterface::class);
+        $paginationData = $categoryRepository->paginate($paginator, 1);
+
+        //Assert
+        $this->assertCount(2, $paginationData['Resources']);
+        $this->assertArrayNotHasKey('Previous page', $paginationData['Page']);
+        $this->assertArrayNotHasKey('Next page', $paginationData['Page']);
+        $this->assertEquals('/categories?page=1', $paginationData['Page']['Current page']);
     }
 
     protected function tearDown(): void

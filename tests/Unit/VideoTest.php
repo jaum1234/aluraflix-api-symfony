@@ -42,41 +42,6 @@ class VideoTest extends KernelTestCase
         $this->assertEquals($category2, $video->getCategory());
     }
 
-    /**
-     * @dataProvider dataForValidator
-     */
-    public function testMustValidateAVideo(
-        int $expectedErros, 
-        string $title, 
-        string $description, 
-        string $url,
-        Category $category
-    ) {
-        
-        //Arrange
-        $video = Video::build($title, $description, $url, $category);
 
-        $validator = Validation::createValidatorBuilder()
-        ->enableAnnotationMapping()
-        ->getValidator();
 
-        //Act
-        $errors = $validator->validate($video);
-
-        //Assert
-        $this->assertEquals($expectedErros, count($errors));
-    }
-
-    public function dataForValidator()
-    {
-        $category = Category::build('title', 'color');
-
-        return [
-            "Succeeds when data is correct" => [0, 'title', 'description', 'http://url.com', $category],
-            "Fails when 'title' is missing" => [1, '', 'description', 'http://url.com', $category],
-            "Fails when 'description' is missing" => [1, 'title', '', 'http://url.com', $category],
-            "Fails when 'url' is missing" => [1, 'title', 'description', '', $category],
-            "Fails when 'url' is invalid" => [1, 'title', 'description', 'url', $category]
-        ];
-    }
 }

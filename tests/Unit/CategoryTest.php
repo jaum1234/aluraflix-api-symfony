@@ -61,25 +61,6 @@ class CategoryTest extends KernelTestCase
         $this->assertEquals('http://url2.com', $videos[1]->getUrl());
     }
 
-    /**
-     * @dataProvider dataForValidator
-     */
-    public function testCategoryMustBeValidated(int $expectedErros, string $title, string $color)
-    {
-        //Arrange
-        $category = Category::build($title, $color);
-
-        $validator = Validation::createValidatorBuilder()
-            ->enableAnnotationMapping()
-            ->getValidator();
-
-        //Act
-        $errors = $validator->validate($category);
-
-        //Assert
-        $this->assertEquals($expectedErros, count($errors));
-    }
-
     public function testMustSetDefautCategoryToRelatedEntities()
     {
         //Arrange
@@ -95,16 +76,6 @@ class CategoryTest extends KernelTestCase
 
         //Assert
         $this->assertEquals($defaultCategory, $videoCategory);
-    }
-
-    public function dataForValidator()
-    {
-        return [
-            "Succeeds when data is correct" => [0, 'title', 'color'],
-            "Fails when 'color' is missing" => [1, 'title', ''],
-            "Fails when 'title' is missing" => [1, '', 'color'],
-            "Fails when 'title' and 'color' is missing" => [2, '', '']
-        ];
     }
 
 }

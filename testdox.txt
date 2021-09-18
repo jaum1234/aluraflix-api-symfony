@@ -1,4 +1,3 @@
-Base Controller (App\Tests\BaseController)
- [x] Request must create an entity successfully with data set "category"
- [ ] Request must create an entity successfully with data set "video"
+Category Repository (App\Tests\CategoryRepository)
+ [x] Must paginate categories
 
