@@ -6,6 +6,9 @@ use App\Entity\Video;
 use App\Entity\Category;
 use App\Controller\BaseController;
 use App\Repository\VideoRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,6 +26,13 @@ class VideoController extends BaseController
     {
         $this->class = Video::class;
         $this->repository = $repository;
+    }
+
+    public function free()
+    {
+        $videos = $this->repository->videosForNonAuthUsers();
+
+        return $this->json($videos);
     }
    
     protected function saveEntity(Request $request)

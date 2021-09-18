@@ -117,7 +117,7 @@ class Video implements \JsonSerializable
                     'path' => '/videos/' . $this->getId()
                 ],
                 [
-                    'rel' => 'especialidades',
+                    'rel' => 'categories',
                     'path' => '/categories/' . $this->getCategory()->getId()
                 ]
             ]

@@ -130,6 +130,10 @@ class Category implements \JsonSerializable, IRelatedEntitiesCantBeDeleted
                     'rel' => 'self',
                     'path' => '/categories/' . $this->getId()
                 ],
+                [
+                    'rel' => 'videos',
+                    'path' => '/categories/' . $this->getId() . '/videos'
+                ]
             ]
         ];
     }
