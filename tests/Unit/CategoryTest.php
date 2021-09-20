@@ -70,7 +70,7 @@ class CategoryTest extends KernelTestCase
         $category->addVideo($video);
 
         //Act
-        $category->setDefaultValuesForRelatedEntities($defaultCategory);
+        $category->setDefaultValueForRelatedEntities($defaultCategory);
         $videos = $category->getVideos();
         $videoCategory = $videos[0]->getCategory();
 

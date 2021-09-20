@@ -86,7 +86,7 @@ abstract class BaseController extends AbstractController
         return $this->json([
             ['status' => 'Found'],
             ['resource' => $resource]
-        ], Response::HTTP_CONTINUE);
+        ], Response::HTTP_OK);
     }
 
     public function store(Request $request, ResourcesValidator $validator, EntityManagerInterface $entityManager)
@@ -153,9 +153,10 @@ abstract class BaseController extends AbstractController
         $entityManager->flush();
 
         return $this->json([
-                $resource->getTitle() . ' deleted!'
+                ['status' => 'Deleted'],
+                ['message' => $resource->getTitle() . ' deleted!']
             ], 
-            410
+            Response::HTTP_GONE
         );
     }
 
