@@ -7,6 +7,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Container0WAxwPn\getContainer_GetenvService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -42,6 +43,7 @@ class VideoRepository extends ServiceEntityRepository
             ->setParameter('queryParameter', '%' . $queryParameter . '%');
 
         $query = $queryBuilder->getQuery();
+        
         return $query->execute();
     }
 

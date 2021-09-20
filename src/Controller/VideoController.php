@@ -64,7 +64,7 @@ class VideoController extends BaseController
         return $category;
     }
 
-    public function updateEntity(Request $request, int $id)
+    protected function updateEntity(Request $request, int $id)
     {
         $categoryRepository = $this->getDoctrine()->getRepository(Category::class);
  
@@ -79,6 +79,16 @@ class VideoController extends BaseController
         $video->setCategory($category);
 
         return $video;
+    }
+
+    protected function deleteEntity(int $id) {
+        $resource = $this->repository->find($id);
+
+        if (is_null($resource)) {
+            throw new \DomainException("This video does not exist.");
+        }
+
+        return $resource;
     }
 
 }

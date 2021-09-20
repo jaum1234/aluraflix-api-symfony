@@ -6,5 +6,5 @@ use Doctrine\ORM\Mapping\Entity;
 
 interface IRelatedEntitiesCantBeDeleted
 {
-    public function setDefaultValuesForRelatedEntities($entity);
+    public function setDefaultValueForRelatedEntities($entity);
 }

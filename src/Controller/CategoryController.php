@@ -6,6 +6,8 @@ use App\Entity\Category;
 use App\Controller\BaseController;
 use App\Controller\OneToManyEntity;
 use App\Repository\CategoryRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use DomainException;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,6 +35,9 @@ class CategoryController extends BaseController
     
     protected function updateEntity(Request $request, int $id): Category
     {
+        if ($id == 1) {
+            throw new \DomainException("This category cannot be updated.");
+        }
     
         $category = $this->repository->find($id);
         
@@ -42,6 +47,24 @@ class CategoryController extends BaseController
         $category->setColor($data['color']);
 
         return $category;
+    }
+
+    protected function deleteEntity(int $id)
+    {
+        $resource = $this->repository->find($id);
+
+        if (is_null($resource)) {
+            throw new \DomainException("This category does not exist.");
+        }
+        
+        if ($id == 1) {
+            throw new \DomainException("This category cannot be deleted.");
+        }
+
+        $resourceWithIdOne = $this->repository->find(1);
+        $resource->setDefaultValueForRelatedEntities($resourceWithIdOne);
+
+        return $resource;
     }
 
     public function searchVideosPerCategory(int $id)

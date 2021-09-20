@@ -108,7 +108,7 @@ class Category implements \JsonSerializable, IRelatedEntitiesCantBeDeleted
             ->setColor($color);
     }
 
-    public function setDefaultValuesForRelatedEntities($category)
+    public function setDefaultValueForRelatedEntities($category)
     {
         $videos = $this->getVideos();
         
