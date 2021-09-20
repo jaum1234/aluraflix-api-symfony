@@ -1,3 +1,13 @@
-Category Repository (App\Tests\CategoryRepository)
- [x] Must paginate categories
+Video Repository (App\Tests\VideoRepository)
+ [x] Must add a video to repository
+ [x] Mustlist all videos
+ [x] Must fetch one video
+ [x] Must fetch videos by query parameter with data set #0
+ [x] Must fetch videos by query parameter with data set #1
+ [x] Must fetch 5 videos for non auth users with data set #0
+ [x] Must fetch 5 videos for non auth users with data set #1
+ [x] Must fetch 5 videos for non auth users with data set #2
+ [x] Must fetch 5 videos for non auth users with data set #3
+ [x] Must fetch 5 videos for non auth users with data set #4
+ [x] Must paginate videos
 

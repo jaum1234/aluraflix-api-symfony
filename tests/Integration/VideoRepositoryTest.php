@@ -53,16 +53,16 @@ class VideoRepositoryTest extends KernelTestCase
     {
         //Arrange
         $category = Category::build('title', 'color');
+        $categoryRepository = $this->entityManager->getRepository(Category::class);
+        $categoryRepository->add($category);
+        
         $video1 = Video::build('title', 'description', 'http://url.com', $category);
         $video2 = Video::build('title2', 'description2', 'http://url2.com', $category);
-    
-        $this->entityManager->persist($category);
-        $this->entityManager->persist($video1);
-        $this->entityManager->persist($video2);
-        $this->entityManager->flush();
+
+        $videoRepository = $this->entityManager->getRepository(Video::class);
+        $videoRepository->add($video1)->add($video2);
 
         //Act
-        $videoRepository = $this->entityManager->getRepository(Video::class);
         $videos = $videoRepository->findAll();
 
         //Assert
@@ -83,14 +83,17 @@ class VideoRepositoryTest extends KernelTestCase
     {
         //Arrange
         $category = Category::build('title', 'color');
+        $categoryRepository = $this->entityManager->getRepository(Category::class);
+        $categoryRepository->add($category);
+        
         $video = Video::build('title', 'description', 'http://url.com', $category);
-        $this->entityManager->persist($category);
-        $this->entityManager->persist($video);
-        $this->entityManager->flush();
+
+        $videoRepository = $this->entityManager->getRepository(Video::class);
+        $videoRepository->add($video);
+        
         $id = $video->getId();
 
         //Act
-        $videoRepository = $this->entityManager->getRepository(Video::class);
         $video = $videoRepository->find($id);
 
         //Assert
@@ -106,16 +109,16 @@ class VideoRepositoryTest extends KernelTestCase
     public function testMustFetchVideosByQueryParameter(string $queryParameter, string $title, string $description, string $url, Category $category)
     {
         //Arrange
+        $categoryRepository = $this->entityManager->getRepository(Category::class);
+        $categoryRepository->add($category);
+
         $video1 = Video::build('title', 'description', 'http://url.com', $category);
         $video2 = Video::build('title2', 'description2', 'http://url2.com', $category);
-    
-        $this->entityManager->persist($category);
-        $this->entityManager->persist($video1);
-        $this->entityManager->persist($video2);
-        $this->entityManager->flush();
+        
+        $videoRepository = $this->entityManager->getRepository(Video::class);
+        $videoRepository->add($video1)->add($video2);
 
         //act
-        $videoRepository = $this->entityManager->getRepository(Video::class);
         $video = $videoRepository->findByQueryParameter($queryParameter);
 
         //assert
@@ -132,22 +135,15 @@ class VideoRepositoryTest extends KernelTestCase
     {
         //Arrange
         $category = Category::build('title', 'color');
-        $video1 = Video::build('title0', 'description0', 'http://url0.com', $category);
-        $video2 = Video::build('title1', 'description1', 'http://url1.com', $category);
-        $video3 = Video::build('title2', 'description2', 'http://url2.com', $category);
-        $video4 = Video::build('title3', 'description3', 'http://url3.com', $category);
-        $video5 = Video::build('title4', 'description4', 'http://url4.com', $category);
-        $video6 = Video::build('title5', 'description5', 'http://url5.com', $category);
-
         $categoryRepository = $this->entityManager->getRepository(Category::class)
             ->add($category);
-        $videoRepository = $this->entityManager->getRepository(Video::class)
-            ->add($video1)
-            ->add($video2)
-            ->add($video3)
-            ->add($video4)
-            ->add($video5)
-            ->add($video6);
+
+        $videoRepository = $this->entityManager->getRepository(Video::class);
+           
+        for ($i = 0; $i < 6; $i++) {
+            $video = Video::build('title' . $i, 'description' . $i, 'http://url' . $i . '.com', $category);
+            $videoRepository->add($video);
+        }
 
         //Act
         $videos = $videoRepository->videosForNonAuthUsers(); 
