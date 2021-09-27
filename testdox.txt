@@ -1,6 +1,12 @@
-Category (App\Tests\Category)
- [x] Must create a category
- [x] Must update a category
- [x] Must relate videos to a category
- [x] Must set defaut category to related entities
+Base Controller (App\Tests\BaseController)
+ [ ] Request must create an entity successfully with data set "category"
+ [ ] Request must create an entity successfully with data set "video"
+ [ ] Request must list all resources successfully with data set "category"
+ [ ] Request must list all resources successfully with data set "video"
+ [ ] Request must fetch one resource successfully with data set "category"
+ [ ] Request must fetch one resource successfully with data set "video"
+ [ ] Request must update a resource successfully with data set "category"
+ [ ] Request must update a resource successfully with data set "video"
+ [ ] Request must delete a resource successfully with data set "category"
+ [ ] Request must delete a resource successfully with data set "video"
 
