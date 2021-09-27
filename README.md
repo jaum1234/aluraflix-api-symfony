@@ -4,6 +4,12 @@
 API Restful com o objetivo de permitir ao usuário montar playlists com links para seus vídeos preferidos, separados por categorias.
 O projeto faz parte do segundo Alura Challenge proposto pela plataforma Alura.
 
+## Tecnologias
+- Symfony
+- MySQL
+- Composer
+- PHPUnit
+- Postman 
 ## Executando no localhost
 1. Clonar projeto
 2. Copiar .env.example para um arquivo .env e configurar seu banco de dados
